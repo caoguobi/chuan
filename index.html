@@ -2,8 +2,9 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>个人主页</title>
+    <!-- 手机关键适配标签 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>欢迎</title>
     <style>
         * {
             margin: 0;
@@ -12,42 +13,85 @@
         }
 
         body {
-            /* 渐变梦幻背景 */
             width: 100vw;
             height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            /* 居中 */
+            /* 深色星空护眼背景 */
+            background: #050714;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            font-family: sans-serif;
         }
 
-        .welcome-text {
-            font-size: 130px;
+        /* 星空粒子容器 */
+        #starBox {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        /* 欢迎文字 手机自适应 */
+        .welcome {
+            position: relative;
+            z-index: 1;
+            /* 手机自动字号 */
+            font-size: clamp(60px, 18vw, 100px);
             font-weight: bold;
-            color: #fff;
-            letter-spacing: 15px;
-            /* 文字发光 */
-            text-shadow: 0 0 20px rgba(255,255,255,0.8);
-            /* 动画：淡入+放大浮动 */
-            animation: fadeScale 3s ease-in-out infinite alternate;
+            color: #ffffff;
+            letter-spacing: 8px;
+            text-shadow: 0 0 8px #87ceeb, 0 0 15px #4682b4;
+            /* 柔和呼吸动画 */
+            animation: softBreath 3s ease-in-out infinite alternate;
         }
 
-        /* 动画定义 */
-        @keyframes fadeScale {
+        @keyframes softBreath {
             0% {
-                opacity: 0.7;
-                transform: scale(0.9);
+                opacity: 0.75;
+                transform: scale(0.95);
             }
             100% {
                 opacity: 1;
-                transform: scale(1.05);
+                transform: scale(1.03);
             }
         }
     </style>
 </head>
 <body>
-    <div class="welcome-text">小川组长是傻逼</div>
+    <div id="starBox"></div>
+    <div class="welcome">dwy</div>
+
+    <script>
+        // 生成手机适配的星星 数量适中不卡顿
+        const starBox = document.getElementById('starBox');
+        const starCount = 150;
+
+        for(let i = 0; i < starCount; i++){
+            let star = document.createElement('div');
+            star.style.position = 'absolute';
+            star.style.background = '#fff';
+            star.style.borderRadius = '50%';
+            star.style.width = Math.random() * 2 + 'px';
+            star.style.height = star.style.width;
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.opacity = Math.random();
+            star.style.animation = `twinkle ${Math.random()*3+2}s ease-in-out infinite alternate`;
+            starBox.appendChild(star);
+        }
+
+        // 星星闪烁动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes twinkle {
+                0% {opacity: 0.2;}
+                100% {opacity: 0.9;}
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
 </body>
 </html>
