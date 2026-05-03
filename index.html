@@ -2,7 +2,6 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <!-- 手机关键适配标签 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>欢迎</title>
     <style>
@@ -15,16 +14,14 @@
         body {
             width: 100vw;
             height: 100vh;
-            /* 深色星空护眼背景 */
-            background: #050714;
+            background: #080b1a;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            font-family: sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
-        /* 星空粒子容器 */
         #starBox {
             position: absolute;
             top: 0;
@@ -34,28 +31,39 @@
             z-index: 0;
         }
 
-        /* 欢迎文字 手机自适应 */
         .welcome {
             position: relative;
             z-index: 1;
-            /* 手机自动字号 */
-            font-size: clamp(60px, 18vw, 100px);
+            font-size: clamp(50px, 20vw, 110px);
             font-weight: bold;
             color: #ffffff;
-            letter-spacing: 8px;
-            text-shadow: 0 0 8px #87ceeb, 0 0 15px #4682b4;
-            /* 柔和呼吸动画 */
-            animation: softBreath 3s ease-in-out infinite alternate;
+            letter-spacing: 6px;
+            text-shadow: 0 0 10px rgba(135, 206, 235, 0.6),
+                        0 0 20px rgba(135, 206, 235, 0.4),
+                        0 0 30px rgba(64, 136, 235, 0.3);
+            animation: softBreath 3.2s ease-in-out infinite alternate;
         }
 
         @keyframes softBreath {
             0% {
-                opacity: 0.75;
-                transform: scale(0.95);
+                opacity: 0.8;
+                transform: scale(0.96);
             }
             100% {
                 opacity: 1;
-                transform: scale(1.03);
+                transform: scale(1.04);
+            }
+        }
+
+        /* 爱心从小变大 + 上浮淡出 */
+        @keyframes heartScale {
+            0% {
+                transform: translateY(0) scale(0.2);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-150px) scale(1.8);
+                opacity: 0;
             }
         }
     </style>
@@ -65,21 +73,21 @@
     <div class="welcome">dwy</div>
 
     <script>
-        // 生成手机适配的星星 数量适中不卡顿
+        // 生成背景星星
         const starBox = document.getElementById('starBox');
-        const starCount = 150;
+        const starCount = 180;
 
         for(let i = 0; i < starCount; i++){
             let star = document.createElement('div');
             star.style.position = 'absolute';
             star.style.background = '#fff';
             star.style.borderRadius = '50%';
-            star.style.width = Math.random() * 2 + 'px';
+            star.style.width = Math.random() * 2.2 + 'px';
             star.style.height = star.style.width;
             star.style.left = Math.random() * 100 + '%';
             star.style.top = Math.random() * 100 + '%';
-            star.style.opacity = Math.random();
-            star.style.animation = `twinkle ${Math.random()*3+2}s ease-in-out infinite alternate`;
+            star.style.opacity = Math.random() * 0.7 + 0.2;
+            star.style.animation = `twinkle ${Math.random()*3.5+2}s ease-in-out infinite alternate`;
             starBox.appendChild(star);
         }
 
@@ -88,10 +96,44 @@
         style.textContent = `
             @keyframes twinkle {
                 0% {opacity: 0.2;}
-                100% {opacity: 0.9;}
+                100% {opacity: 0.85;}
             }
         `;
         document.head.appendChild(style);
+
+        // 好看的爱心配色库
+        const colorList = [
+            '#ff4466',
+            '#ff69b4',
+            '#ff88aa',
+            '#4cd964',
+            '#5ac8fa',
+            '#ffcc00',
+            '#ff9500',
+            '#a855f7',
+            '#ec4899',
+            '#22d3ee',
+            '#f472b6',
+            '#fb7185'
+        ];
+
+        // 点击生成随机颜色爱心
+        document.body.addEventListener('click', function(e) {
+            let heart = document.createElement('div');
+            heart.innerText = '❤';
+            heart.style.position = 'absolute';
+            heart.style.left = e.clientX + 'px';
+            heart.style.top = e.clientY + 'px';
+            // 随机选一个颜色
+            let randomColor = colorList[Math.floor(Math.random() * colorList.length)];
+            heart.style.color = randomColor;
+            heart.style.fontSize = '26px';
+            heart.style.pointerEvents = 'none';
+            heart.style.animation = 'heartScale 1.4s ease-out forwards';
+            document.body.appendChild(heart);
+
+            setTimeout(() => heart.remove(), 1400);
+        });
     </script>
 </body>
 </html>
