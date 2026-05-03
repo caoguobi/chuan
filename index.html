@@ -9,12 +9,11 @@
 body{
   width:100vw;
   height:100vh;
-  background:#050714;
   overflow:hidden;
   font-family:"Microsoft YaHei",sans-serif;
 }
 
-/* 开场页面容器 */
+/* 开场页 改成年轻渐变网红背景 */
 #page1{
   width:100vw;
   height:100vh;
@@ -26,7 +25,8 @@ body{
   top:0;
   left:0;
   z-index:10;
-  background:#050714;
+  /* 年轻梦幻紫蓝渐变 好看不土 */
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   transition: opacity 0.8s ease;
 }
 #page1.hide{
@@ -38,7 +38,7 @@ body{
   font-size:clamp(26px,8vw,45px);
   color:#fff;
   margin-bottom:80px;
-  text-shadow:0 0 10px #87ceeb;
+  text-shadow:0 0 12px rgba(255,255,255,0.3);
   text-align:center;
 }
 .wrap{
@@ -47,7 +47,6 @@ body{
   gap:25px;
 }
 
-/* 仿真鸡蛋 */
 .egg{
   width:120px;
   height:160px;
@@ -56,7 +55,7 @@ body{
   box-shadow:
     inset -15px -15px 30px rgba(0,0,0,0.2),
     inset 12px 12px 25px rgba(255,255,255,0.7),
-    0 20px 40px rgba(0,0,0,0.4);
+    0 20px 40px rgba(0,0,0,0.3);
   position:relative;
   cursor:pointer;
   transition:transform 0.2s ease;
@@ -77,9 +76,10 @@ body{
   transform:scale(0.95);
 }
 .tip-text{
-  color:#eee;
+  color:#fff;
   font-size:22px;
   letter-spacing:2px;
+  text-shadow: 0 0 8px rgba(0,0,0,0.2);
 }
 .fragment{
   position:absolute;
@@ -87,24 +87,7 @@ body{
   border-radius:50%;
   opacity:0.95;
 }
-.ludan{
-  width:100px;
-  height:130px;
-  border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
-  background:linear-gradient(135deg,#7a5c42,#5a4230,#3a281c);
-  box-shadow:inset -8px -8px 15px rgba(0,0,0,0.4),0 15px 35px rgba(0,0,0,0.5);
-  position:relative;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-.ludan .face{
-  font-size:28px;
-  color:#22150c;
-  font-weight:bold;
-}
 
-/* 欢迎主页 星空爱心 */
 #page2{
   width:100vw;
   height:100vh;
@@ -114,6 +97,8 @@ body{
   display:flex;
   justify-content:center;
   align-items:center;
+  /* 后面欢迎页还是保留原来深色星空不变 */
+  background:#080b1a;
 }
 #starBox{
   position:absolute;
@@ -152,23 +137,20 @@ body{
 </head>
 <body>
 
-<!-- 第一页：开场敲鸡蛋 -->
 <div id="page1">
   <div class="title">就tm你叫卤蛋是吧</div>
   <div class="wrap">
     <div class="egg" id="egg"></div>
-    <div class="tip-text">点击敲碎</div>
+    <div class="tip-text" id="tipTxt">点击敲碎</div>
   </div>
 </div>
 
-<!-- 第二页：星空欢迎+爱心 -->
 <div id="page2">
   <div id="starBox"></div>
   <div class="welcome">欢迎</div>
 </div>
 
 <script>
-// ========== 星空星星 ==========
 const starBox = document.getElementById('starBox');
 const starCount = 180;
 for(let i = 0; i < starCount; i++){
@@ -185,14 +167,12 @@ for(let i = 0; i < starCount; i++){
   starBox.appendChild(star);
 }
 
-// ========== 随机彩色爱心 ==========
 const colorList = [
   '#ff4466','#ff69b4','#ff88aa','#4cd964',
   '#5ac8fa','#ffcc00','#ff9500','#a855f7',
   '#ec4899','#22d3ee','#f472b6','#fb7185'
 ];
 document.body.addEventListener('click', function(e) {
-  // 只在开场结束后才能点爱心
   if(!document.getElementById('page1').classList.contains('hide')) return;
   let heart = document.createElement('div');
   heart.innerText = '❤';
@@ -208,27 +188,43 @@ document.body.addEventListener('click', function(e) {
   setTimeout(() => heart.remove(), 1400);
 });
 
-// ========== 鸡蛋敲碎逻辑 ==========
 let clickCount = 0;
-const needClick = 3;
+const perRound = 3;
+let stage = 0;
 const egg = document.getElementById('egg');
-let smashed = false;
+const tipTxt = document.getElementById('tipTxt');
 const page1 = document.getElementById('page1');
+let smashed = false;
+
+const textArr = [
+  "点击敲碎",
+  "就这？",
+  "没吃饭吗？"
+];
 
 egg.onclick = function(){
   if(smashed) return;
   clickCount++;
-  if(clickCount < needClick){
-    egg.style.transform = 'rotate(4deg) scale(0.97)';
-    setTimeout(()=>egg.style.transform='',150);
-    return;
+
+  if(clickCount >= perRound){
+    clickCount = 0;
+    stage++;
+
+    if(stage < 3){
+      tipTxt.innerText = textArr[stage];
+      egg.style.transform = 'rotate(4deg) scale(0.97)';
+      setTimeout(()=>egg.style.transform='',150);
+    }else{
+      smashed = true;
+      smashEgg();
+    }
+  }else{
+    egg.style.transform = 'rotate(2deg) scale(0.98)';
+    setTimeout(()=>egg.style.transform='',100);
   }
-  smashed = true;
-  smashEgg();
 };
 
 function smashEgg(){
-  // 碎片炸裂掉落
   for(let i=0;i<12;i++){
     let f = document.createElement('div');
     f.className = 'fragment';
@@ -247,17 +243,11 @@ function smashEgg(){
     },20);
   }
 
-  // 变卤蛋
   setTimeout(()=>{
     egg.style.background = 'transparent';
     egg.innerHTML = '';
-    let ludan = document.createElement('div');
-    ludan.className = 'ludan';
-    ludan.innerHTML = '<div class="face">😏</div>';
-    egg.appendChild(ludan);
   },500);
 
-  // 1秒后原地切换到欢迎页
   setTimeout(()=>{
     page1.classList.add('hide');
   },1500);
