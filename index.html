@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人主页</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            /* 渐变梦幻背景 */
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            /* 居中 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .welcome-text {
+            font-size: 130px;
+            font-weight: bold;
+            color: #fff;
+            letter-spacing: 15px;
+            /* 文字发光 */
+            text-shadow: 0 0 20px rgba(255,255,255,0.8);
+            /* 动画：淡入+放大浮动 */
+            animation: fadeScale 3s ease-in-out infinite alternate;
+        }
+
+        /* 动画定义 */
+        @keyframes fadeScale {
+            0% {
+                opacity: 0.7;
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="welcome-text">小川组长是傻逼</div>
+</body>
+</html>
