@@ -1,256 +1,314 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>小蛋开场+欢迎主页</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{
-  width:100vw;
-  height:100vh;
-  overflow:hidden;
-  font-family:"Microsoft YaHei",sans-serif;
-}
-
-/* 开场页 改成年轻渐变网红背景 */
-#page1{
-  width:100vw;
-  height:100vh;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  position:absolute;
-  top:0;
-  left:0;
-  z-index:10;
-  /* 年轻梦幻紫蓝渐变 好看不土 */
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  transition: opacity 0.8s ease;
-}
-#page1.hide{
-  opacity:0;
-  pointer-events:none;
-}
-
-.title{
-  font-size:clamp(26px,8vw,45px);
-  color:#fff;
-  margin-bottom:80px;
-  text-shadow:0 0 12px rgba(255,255,255,0.3);
-  text-align:center;
-}
-.wrap{
-  display:flex;
-  align-items:center;
-  gap:25px;
-}
-
-.egg{
-  width:120px;
-  height:160px;
-  border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
-  background: linear-gradient(135deg,#f8f2e6 0%,#f0e6d2 40%,#e3d4bc 100%);
-  box-shadow:
-    inset -15px -15px 30px rgba(0,0,0,0.2),
-    inset 12px 12px 25px rgba(255,255,255,0.7),
-    0 20px 40px rgba(0,0,0,0.3);
-  position:relative;
-  cursor:pointer;
-  transition:transform 0.2s ease;
-}
-.egg::after{
-  content:"";
-  position:absolute;
-  width:40px;
-  height:60px;
-  background:rgba(255,255,255,0.55);
-  border-radius:50%;
-  top:25px;
-  left:20px;
-  transform:rotate(-20deg);
-  filter:blur(6px);
-}
-.egg:active{
-  transform:scale(0.95);
-}
-.tip-text{
-  color:#fff;
-  font-size:22px;
-  letter-spacing:2px;
-  text-shadow: 0 0 8px rgba(0,0,0,0.2);
-}
-.fragment{
-  position:absolute;
-  background:linear-gradient(135deg,#f8f2e6,#e3d4bc);
-  border-radius:50%;
-  opacity:0.95;
-}
-
-#page2{
-  width:100vw;
-  height:100vh;
-  position:absolute;
-  top:0;
-  left:0;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  /* 后面欢迎页还是保留原来深色星空不变 */
-  background:#080b1a;
-}
-#starBox{
-  position:absolute;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  z-index:0;
-}
-.welcome{
-  position:relative;
-  z-index:1;
-  font-size:clamp(50px,20vw,110px);
-  font-weight:bold;
-  color:#ffffff;
-  letter-spacing:6px;
-  text-shadow:0 0 10px rgba(135,206,235,0.6),
-              0 0 20px rgba(135,206,235,0.4),
-              0 0 30px rgba(64,136,235,0.3);
-  animation:softBreath 3.2s ease-in-out infinite alternate;
-}
-
-@keyframes softBreath {
-  0% {opacity:0.8;transform:scale(0.96);}
-  100% {opacity:1;transform:scale(1.04);}
-}
-@keyframes twinkle {
-  0% {opacity:0.2;}
-  100% {opacity:0.85;}
-}
-@keyframes heartScale {
-  0% {transform:translateY(0) scale(0.2);opacity:1;}
-  100% {transform:translateY(-150px) scale(1.8);opacity:0;}
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工具整合面板 - 双拼视图</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .nav-container {
+            max-width: 100%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            font-size: 18px;
+            font-weight: bold;
+            color: #667eea;
+            padding: 12px 0;
+        }
+        
+        .view-toggle {
+            display: flex;
+            gap: 5px;
+            background: #f0f2f5;
+            padding: 4px;
+            border-radius: 8px;
+        }
+        
+        .view-btn {
+            padding: 8px 16px;
+            border: none;
+            background: transparent;
+            color: #666;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .view-btn:hover {
+            color: #667eea;
+        }
+        
+        .view-btn.active {
+            color: #667eea;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .external-links {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .external-btn {
+            padding: 6px 12px;
+            border: 1px solid #667eea;
+            background: white;
+            color: #667eea;
+            font-size: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .external-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .content {
+            flex: 1;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .split-view {
+            display: flex;
+            gap: 15px;
+            height: calc(100vh - 80px);
+        }
+        
+        .panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        .panel-header {
+            padding: 12px 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .panel-title {
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .panel-icon {
+            font-size: 16px;
+        }
+        
+        .panel-link {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-size: 12px;
+            padding: 4px 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+.panel-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .panel-content {
+            flex: 1;
+            position: relative;
+        }
+        
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .single-view {
+            display: none;
+            height: calc(100vh - 80px);
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        .single-view.active {
+            display: block;
+        }
+        
+        .single-view iframe {
+            width: 100%;
+            height: 100%;
+        }
+        
+        @media (max-width: 1024px) {
+            .split-view {
+                flex-direction: column;
+                height: auto;
+                min-height: calc(100vh - 80px);
+            }
+            .panel {
+                min-height: 600px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 10px;
+            }
+            .logo {
+                font-size: 16px;
+            }
+            .view-btn span {
+                display: none;
+            }
+            .external-links {
+                display: none;
+            }
+            .content {
+                padding: 10px;
+            }
+            .split-view {
+                gap: 10px;
+                min-height: calc(100vh - 70px);
+            }
+            .panel {
+                min-height: 500px;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<div id="page1">
-  <div class="title">就tm你叫小蛋（碎愣）是吧</div>
-  <div class="wrap">
-    <div class="egg" id="egg"></div>
-    <div class="tip-text" id="tipTxt">点击敲碎</div>
-  </div>
-</div>
+<nav class="navbar">
+    <div class="nav-container">
+        <div class="logo">🛠 工具整合面板</div>
+        <div class="view-toggle">
+            <button class="view-btn active" onclick="switchView('split', this)">
+                <span>◫</span> 双拼视图
+            </button>
+            <button class="view-btn" onclick="switchView('rsrenwu', this)">
+                <span>▣</span> 任务推荐
+            </button>
+            <button class="view-btn" onclick="switchView('jinji', this)">
+                <span>▣</span> 晋级奖励
+            </button>
+        </div>
+        <div class="external-links">
+            <a href="https://abin593505-a11y.github.io/RSrenwutuijian/" target="_blank" class="external-btn">
+                任务推荐 ↗️
+            </a>
+            <a href="https://abin593505-a11y.github.io/jinjijiangli/" target="_blank" class="external-btn">
+                晋级奖励 ↗️
+            </a>
+        </div>
+    </div>
+</nav>
 
-<div id="page2">
-  <div id="starBox"></div>
-  <div class="welcome">小川是傻逼，纯纯大傻逼，</div>
+<div class="content">
+    <div id="split-view" class="split-view">
+        <div class="panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <span class="panel-icon">📝</span>
+                    任务推荐工具
+                </div>
+                <a href="https://abin593505-a11y.github.io/RSrenwutuijian/" target="_blank" class="panel-link">
+                    单独打开 ↗️
+                </a>
+            </div>
+            <div class="panel-content">
+                <iframe src="https://abin593505-a11y.github.io/RSrenwutuijian/"></iframe>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <span class="panel-icon">🎉</span>
+                    晋级奖励工具
+                </div>
+                <a href="https://abin593505-a11y.github.io/jinjijiangli/" target="_blank" class="panel-link">
+                    单独打开 ↗️
+                </a>
+            </div>
+            <div class="panel-content">
+                <iframe src="https://abin593505-a11y.github.io/jinjijiangli/"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <div id="single-rsrenwu" class="single-view">
+        <iframe src="https://abin593505-a11y.github.io/RSrenwutuijian/"></iframe>
+    </div>
+
+    <div id="single-jinji" class="single-view">
+        <iframe src="https://abin593505-a11y.github.io/jinjijiangli/"></iframe>
+    </div>
 </div>
 
 <script>
-const starBox = document.getElementById('starBox');
-const starCount = 180;
-for(let i = 0; i < starCount; i++){
-  let star = document.createElement('div');
-  star.style.position = 'absolute';
-  star.style.background = '#fff';
-  star.style.borderRadius = '50%';
-  star.style.width = Math.random() * 2.2 + 'px';
-  star.style.height = star.style.width;
-  star.style.left = Math.random() * 100 + '%';
-  star.style.top = Math.random() * 100 + '%';
-  star.style.opacity = Math.random() * 0.7 + 0.2;
-  star.style.animation = `twinkle ${Math.random()*3.5+2}s ease-in-out infinite alternate`;
-  starBox.appendChild(star);
-}
+function switchView(view, btn) {
+    document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
 
-const colorList = [
-  '#ff4466','#ff69b4','#ff88aa','#4cd964',
-  '#5ac8fa','#ffcc00','#ff9500','#a855f7',
-  '#ec4899','#22d3ee','#f472b6','#fb7185'
-];
-document.body.addEventListener('click', function(e) {
-  if(!document.getElementById('page1').classList.contains('hide')) return;
-  let heart = document.createElement('div');
-  heart.innerText = '❤';
-  heart.style.position = 'absolute';
-  heart.style.left = e.clientX + 'px';
-  heart.style.top = e.clientY + 'px';
-  let randomColor = colorList[Math.floor(Math.random() * colorList.length)];
-  heart.style.color = randomColor;
-  heart.style.fontSize = '26px';
-  heart.style.pointerEvents = 'none';
-  heart.style.animation = 'heartScale 1.4s ease-out forwards';
-  document.body.appendChild(heart);
-  setTimeout(() => heart.remove(), 1400);
-});
+    document.getElementById('split-view').style.display = 'none';
+    document.getElementById('single-rsrenwu').classList.remove('active');
+    document.getElementById('single-jinji').classList.remove('active');
 
-let clickCount = 0;
-const perRound = 3;
-let stage = 0;
-const egg = document.getElementById('egg');
-const tipTxt = document.getElementById('tipTxt');
-const page1 = document.getElementById('page1');
-let smashed = false;
-
-const textArr = [
-  "点击敲碎",
-  "就这？",
-  "没吃饭吗？"
-];
-
-egg.onclick = function(){
-  if(smashed) return;
-  clickCount++;
-
-  if(clickCount >= perRound){
-    clickCount = 0;
-    stage++;
-
-    if(stage < 3){
-      tipTxt.innerText = textArr[stage];
-      egg.style.transform = 'rotate(4deg) scale(0.97)';
-      setTimeout(()=>egg.style.transform='',150);
-    }else{
-      smashed = true;
-      smashEgg();
+    if (view === 'split') {
+        document.getElementById('split-view').style.display = 'flex';
+    } else if (view === 'rsrenwu') {
+        document.getElementById('single-rsrenwu').classList.add('active');
+    } else if (view === 'jinji') {
+        document.getElementById('single-jinji').classList.add('active');
     }
-  }else{
-    egg.style.transform = 'rotate(2deg) scale(0.98)';
-    setTimeout(()=>egg.style.transform='',100);
-  }
-};
-
-function smashEgg(){
-  for(let i=0;i<12;i++){
-    let f = document.createElement('div');
-    f.className = 'fragment';
-    let size = Math.floor(Math.random()*20)+15;
-    f.style.width = size+'px';
-    f.style.height = size+'px';
-    egg.appendChild(f);
-    let angle = Math.random() * Math.PI * 2;
-    let dist = 80 + Math.random()*60;
-    f.style.left = 60 + Math.cos(angle)*dist + 'px';
-    f.style.top = 80 + Math.sin(angle)*dist + 'px';
-    f.style.transition = 'all 1.2s ease-out';
-    setTimeout(()=>{
-      f.style.opacity = 0;
-      f.style.transform = `translateY(${80+Math.random()*100}px) rotate(${Math.random()*360}deg)`;
-    },20);
-  }
-
-  setTimeout(()=>{
-    egg.style.background = 'transparent';
-    egg.innerHTML = '';
-  },500);
-
-  setTimeout(()=>{
-    page1.classList.add('hide');
-  },1500);
 }
 </script>
 
